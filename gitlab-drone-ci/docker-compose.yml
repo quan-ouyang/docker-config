@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    ports:
+      - 8929:80
+      - 2289:22
+    volumes:
+      - /opt/docker/logs/gitlab:/var/log/gitlab
+    restart: always
+
+  drone-server:
+    image: drone/drone:0.8
+    ports:
+      - 8381:8000
+      - 9000
+    volumes:
+      - /media/xww/sda1/myproject/drone:/var/lib/drone/
+    restart: always
+    environment:
+     - DRONE_OPEN=true
+     - DRONE_HOST=http://drone-server:8000
+     - DRONE_GITLAB=true
+     - DRONE_GITLAB_CLIENT=44aca6668e69a0134a818f0c71f6c5d8ad2a6fc7c108b9edb8029afb71e91ac3
+     - DRONE_GITLAB_SECRET=ab055dcb8cb39abca8787f180274e53ed6e4e3319278fd62a35641a8958773c9
+     - DRONE_GITLAB_URL=http://gitlab
+     - DRONE_GITLAB_SKIP_VERIFY=true
+     - DRONE_SECRET=engine123
+  drone-agent:
+    image: drone/agent:0.8
+    restart: always
+    depends_on:
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_SERVER=drone-server:9000
+      - DRONE_SECRET=engine123
