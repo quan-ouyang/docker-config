@@ -1,0 +1,21 @@
+version: "3"
+services:
+  auth:
+    image: jboss/keycloak
+    ports:
+    - "8080:8080"
+    environment:
+    - "KEYCLOAK_USER=ouyang"
+    - "KEYCLOAK_PASSWORD=yyqyyq123"
+    - "DB_VENDOR=mysql"
+    - "DB_ADDR=127.0.0.1"
+    - "DB_DATABASE=keycloak"
+    - "DB_USER=xgenius"
+    - "DB_PASSWORD=ILIYoipNSjJPzPRg"
+    - "PROXY_ADDRESS_FORWARDING=true"
+  postgres:
+    image: postgres:9.6
+    ports:
+    - "5432:5432"
+    environment:
+    - "POSTGRES_PASSWORD=dalong"
